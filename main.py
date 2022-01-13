@@ -5,15 +5,23 @@ import random
 current_card = {}
 
 # get df_data
-data = pandas.read_csv("data/french_words.csv")
-to_learn = data.to_dict(orient="records")
+try:
+    data = pandas.read_csv("data/words_to_learn.csv")
+except FileNotFoundError:
+    original_data = pandas.read_csv("data/french_words.csv")
+    to_learn = original_data.to_dict(orient="records")
+else:
+    to_learn = data.to_dict(orient="records")
 
 
 # ---------------------------------- remove word ----------------------------------- #
 def is_known():
+    # only use current card and don't change current card, so don't need to write "global current card".
     to_learn.remove(current_card)
+    print(len(to_learn))
     df = pandas.DataFrame(to_learn)
-    df.to_csv("data/words_to_learn.csv")
+    df.to_csv("data/words_to_learn.csv", index=False)
+    next_card()
 
 
 # ---------------------------------- get random word ------------------------------- #
